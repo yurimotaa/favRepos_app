@@ -46,4 +46,42 @@ const StyledButtonSubmit = styled.button.attrs({
   justify-content: center;
 `;
 
-export { StyledMain, StyledForm, StyledButtonSubmit };
+const StyledList = styled.ul`
+  list-style: none;
+  margin-top: 20px;
+
+  li {
+    padding: 15px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    /* Ignora o primeiro li e continua do seguinte */
+    & + li {
+      border-top: 1px solid #eee;
+    }
+
+    a {
+      color: #0d2636;
+      text-decoration: none;
+    }
+  }
+`;
+
+const StyledDeleteBtn = styled.button`
+  padding: 8px 7px;
+  background: transparent;
+  color: #0d2636;
+  border: none;
+  outline: 0;
+  border-radius: 4px;
+`;
+
+export {
+  StyledMain,
+  StyledForm,
+  StyledButtonSubmit,
+  StyledList,
+  StyledDeleteBtn,
+};

@@ -1,17 +1,29 @@
-import { FaGithub, FaPlus, FaSpinner } from "react-icons/fa";
-import { StyledMain, StyledForm, StyledButtonSubmit } from "./styles";
+import { FaGithub, FaPlus, FaSpinner, FaBars, FaTrash } from "react-icons/fa";
+import {
+  StyledMain,
+  StyledForm,
+  StyledButtonSubmit,
+  StyledList,
+  StyledDeleteBtn,
+} from "./styles";
 import { useContext } from "react";
 import { ReposContext } from "../../contexts/reposContext";
 
 const Main = () => {
-  const { newRepo, handleInputChange, handleSubmit, loading } =
-    useContext(ReposContext);
-
+  const {
+    newRepo,
+    handleInputChange,
+    handleSubmit,
+    deleteRepo,
+    loading,
+    repos,
+  } = useContext(ReposContext);
+  console.log(repos);
   return (
     <StyledMain>
       <h1>
         <FaGithub size={25} />
-        Meus repositórios
+        Repositórios Favoritos
       </h1>
 
       <StyledForm onSubmit={handleSubmit}>
@@ -30,6 +42,22 @@ const Main = () => {
           )}
         </StyledButtonSubmit>
       </StyledForm>
+
+      <StyledList>
+        {repos.map((repo) => (
+          <li key={crypto.randomUUID()}>
+            <span>
+              <StyledDeleteBtn type="button" onClick={() => deleteRepo(repo)}>
+                <FaTrash size={14} />
+              </StyledDeleteBtn>
+              {repo}
+            </span>
+            <a href="">
+              <FaBars size={20} />
+            </a>
+          </li>
+        ))}
+      </StyledList>
     </StyledMain>
   );
 };
