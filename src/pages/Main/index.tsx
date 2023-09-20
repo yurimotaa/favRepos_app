@@ -8,6 +8,7 @@ import {
 } from "./styles";
 import { useContext } from "react";
 import { ReposContext } from "../../contexts/reposContext";
+import { Link } from "react-router-dom";
 
 const Main = () => {
   const {
@@ -18,7 +19,7 @@ const Main = () => {
     loading,
     repos,
   } = useContext(ReposContext);
-  console.log(repos);
+
   return (
     <StyledMain>
       <h1>
@@ -52,9 +53,9 @@ const Main = () => {
               </StyledDeleteBtn>
               {repo}
             </span>
-            <a href="">
+            <Link to={`/repositorio/${encodeURIComponent(repo)}`}>
               <FaBars size={20} />
-            </a>
+            </Link>
           </li>
         ))}
       </StyledList>

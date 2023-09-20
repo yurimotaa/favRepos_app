@@ -10,10 +10,13 @@ interface IReposContext {
   newRepo: string;
   repos: string[];
   loading: boolean;
+  repository: any;
+  issues: any[];
   handleInputChange: (e: any) => void;
   handleSubmit: (e: any) => void;
   getRepo: () => Promise<Id | undefined>;
   deleteRepo: (repo: string) => void;
+  loadInfosRepo: (repoNome: string) => Promise<void>;
 }
 
 export const ReposContext = createContext({} as IReposContext);
@@ -22,6 +25,8 @@ export const ReposContextProvider = ({ children }: IDefaultProps) => {
   const [newRepo, setNewRepo] = useState("");
   const [repos, setRepos] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [repository, setRepository] = useState({});
+  const [issues, setIssues] = useState([]);
 
   useEffect(() => {
     const local = localStorage.getItem("repos");
@@ -48,7 +53,7 @@ export const ReposContextProvider = ({ children }: IDefaultProps) => {
 
       if (findedRepo) {
         setNewRepo("");
-        return toast.error("Repositorio já adicionado");
+        return toast.error("Repositório já adicionado");
       }
 
       const updatedRepos = [...repos, response.data.full_name];
@@ -74,6 +79,22 @@ export const ReposContextProvider = ({ children }: IDefaultProps) => {
 
     localStorage.setItem("repos", JSON.stringify(filteredRepos));
     setRepos(filteredRepos);
+    toast.warning("Repositório deletado");
+  };
+
+  const loadInfosRepo = async (repoNome: string) => {
+    const [repoData, issuesData] = await Promise.all([
+      api.get(`repos/${repoNome}`),
+      api.get(`repos/${repoNome}/issues`, {
+        params: {
+          state: "open",
+          per_page: 5,
+        },
+      }),
+    ]);
+
+    setRepository(repoData.data);
+    setIssues(issuesData.data);
   };
 
   return (
@@ -82,10 +103,13 @@ export const ReposContextProvider = ({ children }: IDefaultProps) => {
         newRepo,
         loading,
         repos,
+        issues,
+        repository,
         handleInputChange,
         handleSubmit,
         getRepo,
         deleteRepo,
+        loadInfosRepo,
       }}
     >
       {children}
