@@ -12,6 +12,7 @@ interface IReposContext {
   loading: boolean;
   repository: any;
   issues: any[];
+  setIssues: React.Dispatch<React.SetStateAction<never[]>>;
   handleInputChange: (e: any) => void;
   handleSubmit: (e: any) => void;
   getRepo: () => Promise<Id | undefined>;
@@ -105,6 +106,7 @@ export const ReposContextProvider = ({ children }: IDefaultProps) => {
         repos,
         issues,
         repository,
+        setIssues,
         handleInputChange,
         handleSubmit,
         getRepo,
