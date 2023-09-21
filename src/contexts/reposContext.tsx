@@ -12,6 +12,11 @@ interface IReposContext {
   loading: boolean;
   repository: any;
   issues: any[];
+  filters: {
+    state: string;
+    label: string;
+    active: boolean;
+  }[];
   setIssues: React.Dispatch<React.SetStateAction<never[]>>;
   handleInputChange: (e: any) => void;
   handleSubmit: (e: any) => void;
@@ -28,6 +33,11 @@ export const ReposContextProvider = ({ children }: IDefaultProps) => {
   const [loading, setLoading] = useState(false);
   const [repository, setRepository] = useState({});
   const [issues, setIssues] = useState([]);
+  const [filters, setFilters] = useState([
+    { state: "all", label: "Todas", active: true },
+    { state: "open", label: "Abertas", active: false },
+    { state: "closed", label: "Fechadas", active: false },
+  ]);
 
   useEffect(() => {
     const local = localStorage.getItem("repos");
@@ -88,7 +98,7 @@ export const ReposContextProvider = ({ children }: IDefaultProps) => {
       api.get(`repos/${repoNome}`),
       api.get(`repos/${repoNome}/issues`, {
         params: {
-          state: "open",
+          state: filters.find((f) => f.active)!.state,
           per_page: 5,
         },
       }),
@@ -101,6 +111,7 @@ export const ReposContextProvider = ({ children }: IDefaultProps) => {
   return (
     <ReposContext.Provider
       value={{
+        filters,
         newRepo,
         loading,
         repos,

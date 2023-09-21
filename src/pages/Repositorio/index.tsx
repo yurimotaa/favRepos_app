@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import {
+  FilterList,
   IssuesList,
   Loading,
   Owner,
@@ -12,15 +13,20 @@ import { FaArrowLeft } from "react-icons/fa";
 import { api } from "../../services/api";
 
 const Repositorio = () => {
-  const { loadInfosRepo, repository, issues, setIssues } =
+  const { loadInfosRepo, repository, issues, setIssues, filters } =
     useContext(ReposContext);
 
   const { repositorio } = useParams();
 
   const [page, setPage] = useState(1);
+  const [filterIndex, setFilterIndex] = useState(0);
 
   const handlePage = (action: string) => {
     setPage(action === "previous" ? page - 1 : page + 1);
+  };
+
+  const handleFilter = (index: number) => {
+    setFilterIndex(index);
   };
 
   useEffect(() => {
@@ -32,7 +38,7 @@ const Repositorio = () => {
     const loadIssue = async () => {
       const response = await api.get(`/repos/${repositorio}/issues`, {
         params: {
-          state: "open",
+          state: filters[filterIndex].state,
           page: page,
           per_page: 5,
         },
@@ -41,7 +47,7 @@ const Repositorio = () => {
     };
 
     loadIssue();
-  }, [page]);
+  }, [page, filterIndex, filters]);
 
   if (!repository) {
     return (
@@ -63,6 +69,18 @@ const Repositorio = () => {
         <h1>{repository.name}</h1>
         <p>{repository.description}</p>
       </Owner>
+
+      <FilterList>
+        {filters.map((filter, index) => (
+          <button
+            type="button"
+            key={crypto.randomUUID()}
+            onClick={() => handleFilter(index)}
+          >
+            {filter.label}
+          </button>
+        ))}
+      </FilterList>
 
       <IssuesList>
         {issues.map((issue) => (
