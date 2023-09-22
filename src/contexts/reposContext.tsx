@@ -33,7 +33,7 @@ export const ReposContextProvider = ({ children }: IDefaultProps) => {
   const [loading, setLoading] = useState(false);
   const [repository, setRepository] = useState({});
   const [issues, setIssues] = useState([]);
-  const [filters, setFilters] = useState([
+  const [filters] = useState([
     { state: "all", label: "Todas", active: true },
     { state: "open", label: "Abertas", active: false },
     { state: "closed", label: "Fechadas", active: false },
