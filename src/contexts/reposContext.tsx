@@ -94,6 +94,7 @@ export const ReposContextProvider = ({ children }: IDefaultProps) => {
   };
 
   const loadInfosRepo = async (repoNome: string) => {
+    setLoading(true);
     const [repoData, issuesData] = await Promise.all([
       api.get(`repos/${repoNome}`),
       api.get(`repos/${repoNome}/issues`, {
@@ -106,6 +107,8 @@ export const ReposContextProvider = ({ children }: IDefaultProps) => {
 
     setRepository(repoData.data);
     setIssues(issuesData.data);
+
+    setLoading(false);
   };
 
   return (

@@ -11,10 +11,13 @@ import { ReposContext } from "../../contexts/reposContext";
 import { useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { api } from "../../services/api";
+import { ILabel } from "../../interfaces/interfaces";
 
 const Repositorio = () => {
-  const { loadInfosRepo, repository, issues, setIssues, filters } =
+  const { loadInfosRepo, repository, issues, setIssues, filters, loading } =
     useContext(ReposContext);
+
+  console.log(issues);
 
   const { repositorio } = useParams();
 
@@ -49,7 +52,7 @@ const Repositorio = () => {
     loadIssue();
   }, [page, filterIndex, filters]);
 
-  if (!repository) {
+  if (loading) {
     return (
       <Loading>
         <h1>Carregando...</h1>
@@ -92,7 +95,7 @@ const Repositorio = () => {
                 <a href={issue.html_url} target="blank">
                   {issue.title}
                 </a>
-                {issue.labels.map((label: any) => (
+                {issue.labels.map((label: ILabel) => (
                   <span key={crypto.randomUUID()}>{label.name}</span>
                 ))}
               </strong>
